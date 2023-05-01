@@ -1,0 +1,122 @@
+% https://qiita.com/yasuo-ozu/items/8f57489fa15cc26aedac
+% このサイトをベースに足りない部分を追加してる
+% ex azmath, easytable, +newpage, などなど
+
+
+% 文書ファイル
+
+% 文書クラスパッケージ
+@require: stdjareport
+
+% SATySFi標準パッケージ
+@require: annot
+@require: code
+@require: math
+@require: itemize
+
+% Satyrographosパッケージ
+@require: fss/fss
+@require: fss/fonts
+@require: fss/style
+
+% プロジェクト内パッケージ
+@import: local
+@require: code
+@require: itemize
+@require: tabular
+@require: proof
+
+%自分で追加したパッケージ
+@require: siunitx/siunitx
+@require: azmath/azmath
+@require: figbox/figbox
+@require: easytable/easytable
+
+open EasyTableAlias
+open FigBox
+
+in
+
+% ここから本編
+document (|
+  title = {タイトル};
+  author = {};
+  show-title = true;
+  show-toc = false;
+|) '<
+  +centerings{
+    | 電気通信大学 類 
+    | 2310000 りさじゅう
+    |2023年4月24日作成
+    |2023年4月28日更新
+  |}
+
+  +chapter{目的}<
+    +p{
+
+    }
+  >
+
+  +chapter{原理}<
+    +p{
+      
+    }
+  >
+
+  +chapter{方法}<
+    +p{
+      
+    }
+  >
+
+  +chapter{実験結果}<
+    +p{
+      
+    }
+  >
+
+  +chapter{考察}<
+    +p{
+      
+    }
+  >
+>
+
+% 付録
+% コピペよう
+
+% 章+段落
+% +chapter{ hoge }<
+%   +p{
+%     hoge    
+%   }
+% >
+
+% 数式
+% \eqn(${
+%   E = mc^2
+%   \label!(` hoge `)
+% });
+
+% 表
+% https://satyrographos-packages.netlify.app/docs/easytable-doc/easytable.pdf
+% +fig-center(
+%     textbox{
+%       \easytable[l; r]{
+%         |hoge |hoge
+%       |}
+%     }|> with-caption-top{表1:キャプション}
+% )
+
+% 画像
+% https://satyrographos-packages.netlify.app/docs/image-doc/manual-ja.pdf
+% +fig-center(
+%   include-image 300pt `hoge.jpeg`
+%   |> with-caption-bottom { hoge }
+% );
+
+% SI単位の入れ方
+% https://satyrographos-packages.netlify.app/docs/siunitx-doc/siunitx-ja.pdf
+% 落単は知りません
+
+
