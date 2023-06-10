@@ -1,0 +1,52 @@
+% プロジェクト用函数・コマンド定義用ファイル
+@require: code
+@require: math
+@require: figbox/figbox
+
+
+let-block ctx +frame content =
+  let pads = (10pt, 10pt, 10pt, 10pt) in
+  let decoset = VDecoSet.simple-frame-stroke 1pt (Color.gray 0.75) in
+    block-frame-breakable ctx pads decoset (fun ctx -> read-block ctx content)
+
+let-block ctx +display-boxes content code =
+  read-block (ctx |> set-paragraph-margin 12pt 0pt) '<+frame(content);>
+    +++ read-block (ctx |> set-paragraph-margin 0pt 12pt) '<+code(code);>
+
+% 数式コマンドの定義
+let-math \factorial x =
+  ${#x \mathpunct{\mathrm-token!(`!`)}}
+
+% 中央揃え
+let-block ctx +centerings its =
+  let l = get-font-size ctx *' 0.25 in
+  let bbs =
+    its |> List.map (fun it ->
+      line-break true true (ctx |> set-paragraph-margin l l)
+        (inline-fil ++ read-inline ctx it ++ inline-fil))
+  in
+    bbs |> List.fold-left (+++) block-nil
+
+% 改行
+let-inline ctx \br = inline-fil ++ embed-block-breakable ctx (block-skip (get-natural-width (read-inline ctx {m})))
+
+% 画像にキャプションつける https://speakerdeck.com/pickoba/satysfi-dezu-lun-woshu-itahua?slide=9
+
+open FigBox
+% 上にキャプションをつけるとき
+let with-caption-top caption figbox = 
+  vconcat ?:align-center [
+    textbox caption;
+    gap 10pt;
+    figbox;
+  ]
+% したにキャプションをつけるとき
+let with-caption-bottom caption figbox = 
+  vconcat ?:align-center [
+    figbox;
+    gap 10pt;
+    textbox caption;
+  ]
+
+% 新しいページ
+let-block ctx +newpage = clear-page

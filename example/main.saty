@@ -1,0 +1,495 @@
+% https://qiita.com/yasuo-ozu/items/8f57489fa15cc26aedac
+% このサイトをベースに足りない部分を追加してる
+% ex azmath, easytable, +newpage, などなど
+
+
+% 文書ファイル
+
+% 文書クラスパッケージ
+@require: stdjareport
+
+% SATySFi標準パッケージ
+@require: annot
+@require: code
+@require: math
+@require: itemize
+
+% Satyrographosパッケージ
+@require: fss/fss
+@require: fss/fonts
+@require: fss/style
+
+% プロジェクト内パッケージ
+@import: local
+@require: code
+@require: itemize
+@require: tabular
+@require: proof
+
+%自分で追加したパッケージ
+@require: siunitx/siunitx
+@require: azmath/azmath
+@require: figbox/figbox
+@require: easytable/easytable
+
+open EasyTableAlias
+open FigBox
+
+in
+
+% ここから本編
+document (|
+  title = {重力加速度の測定};
+  author = {};
+  show-title = true;
+  show-toc = false;
+|) '<
+  +centerings{
+    | 電気通信大学 3類 
+    | 231000 りさじゅう
+    |2023年5月10日作成
+    |2023年5月21日更新
+  |}
+
+  +chapter{目的}<
+    +p{
+      ボルタの振り子を用いて、振り子の周期を精密に測定することで、東京の重力加速度を4桁の精度で測定する。
+    }
+  >
+
+  +chapter{原理}<
+    +p{
+      振り子の長さを${h}とすると周期${T}は次式で表される。
+      \eqn(${
+        T = 2 \pi \sqrt{ \frac{h}{g}}
+        % \label!(` hoge `)
+      });   
+    }
+
+    +p{
+      ただし、この式は振り子のおもりが小さく、振動の振幅も小さい場合の近侍式である。振り子の周期${T}を使い重力加速度${g}を求めときは次の式を使う。
+      \eqn(${
+        g = \frac{4 \pi ^2 h}{T^2}
+        % \label!(` hoge `)
+      });   
+    }
+
+    % +p{
+    %   振り子の長さを${h=1 \metre}とすると、周期は約2秒となる。振り子の長さを不確かさ${1 \milli \metre}いない、すなわち${1/1000}の精度で測るのは容易である。
+    % }
+
+    +p{
+      おもりの大きさの影響と振り子の振幅の影響も考慮し、おもりの半径を${r}、振り子の最大振り角を${\theta}とすると、周期${T}は、もう少し良い近似で次の式で表される。
+      \eqn(${
+        T = 2 \pi \sqrt{ \frac{h}{g} \p{1+\frac{2r^2}{5h^2}} } \p{1+\frac{\theta^2}{16}}
+        \label!(`kinnjisiki`)
+      });
+      式（\ref(`eq:kinnjisiki`);）において、根号内の ( ) はおもりの大きさの効果を、最後の ( ) が振幅が有限であることの効果を表している。これらを踏まえると、重力加速度は次の式のように表される。
+      \eqn(${
+        g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{2r^2}{5h^2} + \frac{\theta^2}{8}
+      }});
+    }
+
+    +p{
+      周期の測定は正確に${T_0=2s}毎の光パルスで照射し、振り子の周期${T}と光パルスとの唸りを求めることで振り子の周期を求める。光パルスの周期を${T_0}、うなりの周期を${\tau}とすると、振り子の周期を${T}は次式で表される。
+      \eqn(${
+        \frac{1}{T_0} - \frac{1}{T} = \frac{\pm 1}{\tau}
+      }); 
+      \eqn(${
+        T = T_0 \pm \frac{T_0^2}{\tau \mp T_0}
+      });
+      複合(${\pm}と${\mp})は振り子のの周期${T}が${T_0}より長いときは上を、短いときは下をとる。
+    }
+  >
+
+  +chapter{方法}<
+    +section{実験の概略}<
+      +p{
+        振り子の金具を、周期が約2秒になるように調整し振り子を作成した。
+      }
+      +fig-center(
+        include-image 300pt `実験図.jpeg`
+        |> with-caption-bottom { 図1:実験概略図 }
+      );
+    >
+    
+    +section{周期${T}と振れ角${\theta}の測定}<
+      +p{
+        振り子を、剛球の捩れや楕円運動がないように振動させる。正確に2秒(誤差は${1.0 * 10 ^{-6}}s以内)ごとに発行するランプを使い、白く光る吊り線がゆっくりと左右に往復する周期${\tau}を計測する。
+      }
+      +p{
+        振れ角${\theta}はスケール上の振幅${a}と支点からスケールまでの距離${l}とから${\theta \simeq tan\theta = a / l}と計算される。
+      }
+    >
+  >
+
+  +chapter{実験結果}<
+    +section{測定結果}<
+      +p{
+        直接測定した物理量に関しては以下の結果となった。剛球の直径を${d}、下の受台から上の支点までを${H}、下の受台の高さを${h''}、計測前の振幅を${a_i}、計測後の振幅を${a_f}、うなりの周期を${\tau}とした。${d, H, h'', \tau}に関しては不確かさを併記した。
+      }
+      +fig-center(
+        include-image 500pt `直接測定結果.jpeg`
+        |> with-caption-top { 表1:各物理量の直接測定の結果 }
+      );
+
+      +subsection{${\Delta h}の算出}<
+        +p{
+          ${\Delta h}は、${\Delta H}と${\Delta  h''}と${\Delta d}から計算されるので、hを算出するよりも前に求めておく。下の受台から上の支点までの金尺の公差${0.5 \milli \metre}を${\Delta H}、下の受台の高さの金尺の交差${0.5 \milli \metre}を${\Delta h''}、剛球の直径のノギスの交差${0.05 \milli \metre}を${\Delta d}とした。これらより${\Delta  h}を求めると${\Delta h = 0.7 \milli\metre}となった。
+          \eqn(${
+            \Delta h = \sqrt{ \p{\Delta H}^2 + \p{\Delta h''}^2 + \p{\frac{\Delta d}{2}}^2}
+            = \sqrt{ \p{0.5}^2 + \p{0.5}^2 + \p{\frac{0.05}{2}}^2}
+            = 0.70754858
+            \simeq  0.7 \milli \metre \notag
+          });
+        }
+      >
+
+      
+    >
+
+    %１回目の実験
+    +newpage;
+    +section{１回目の実験の解析結果}<
+      +subsection{${h}の算出}<
+        +p{
+          ${ H}と${h''}と${d}より${h}を求めると
+          \eqn(${
+            h = H - h'' -d/2 = 1055.5 - 34.5 - 25.40 / 2 = 1008.3 \milli \metre \notag
+          });
+          となる。すでに求めた${\Delta h}と併記すると${h=1008.3 \pm 0.7 \milli\metre}とかける。
+        }
+      >
+      +subsection{${T}の算出}<
+        +p{
+          振り子の長さ${h}より、周期${T>2}と予想される。${T_0=2}、${\Delta \tau=1}より、${T}と${\Delta T}を求めると、
+          \eqn(${
+            T = t_0 + \frac{T_0^2}{\tau - T_0}
+            = 2 + \frac{2^2}{244 - 2} = 2.01652 \second \notag
+          });
+          \eqn(${
+            \Delta T = \frac{T_0^2}{\tau ^2} \Delta \tau = \frac{4}{244^2}\cdot 1 = 0.000067 \cdots \simeq 0.00006 \notag
+          });
+          となる。よって、${T=2.01652\pm 0.00006}とかける。
+        }
+      >
+      +subsection{${g_1}の算出}<
+        +p{
+          以上の測定値及び算出値を用いて${g_1}を求めると、
+        }
+        +math(${
+          g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{d^2}{10h^2} + \frac{a_i a_f}{8l^2}}
+          = \frac{4 \pi ^2 \cdot 1008.3}{2.01652 ^2} \p{1+\frac{25.40^2}{10\cdot 1008.3^2} + \frac{30\cdot 20}{8\cdot 879.5^2}} 
+        });
+        +math(${
+          = 9786.3129958\cdots \milli\metre / \second ^2 = 9.7863129958\cdots \metre / \second ^2
+        });
+        +p{
+          となる。${\Delta g_1}は、${g_1 \simeq 10 \metre\second^{-2}, h \simeq 1000 \milli\metre, T \simeq 2 \second}を用いて、
+        }
+        +math(${
+          \Delta g_1 = g_1 \sqrt{\p{\frac{\Delta h}{h}}^2 + \p{\frac{2\Delta T}{T}}^2}
+          \simeq 10 \sqrt{\p{\frac{0.7}{1000}}^2 + \p{\frac{2 \cdot 0.00006}{2}}^2}
+        });
+        +math(${
+          = 0.007006425 \cdots \simeq 0.007 \metre \second ^{-2}
+        });
+        +p{
+          と求まる。よって１回目の測定結果は${9.786\pm 0.007 \metre \second ^ {-2}}となった。
+        }
+      >
+    >
+
+    %２回目の実験
+    +newpage;
+    +section{2回目の実験の解析結果}<
+      +subsection{${h}の算出}<
+        +p{
+          ${ H}と${h''}と${d}より${h}を求めると
+          \eqn(${
+            h = H - h'' -d/2 = 1055.5 - 34.5 - 25.40 / 2 = 1008.3 \milli \metre \notag
+          });
+          となる。すでに求めた${\Delta h}と併記すると${h=1008.3 \pm 0.7 \milli\metre}とかける。
+        }
+      >
+      +subsection{${T}の算出}<
+        +p{
+          振り子の長さ${h}より、周期${T>2}と予想される。${T_0=2}、${\Delta \tau=1}より、${T}と${\Delta T}を求めると、
+          \eqn(${
+            T = t_0 + \frac{T_0^2}{\tau - T_0}
+            = 2 + \frac{2^2}{216 - 2} = 2.01869 \second \notag
+          });
+          \eqn(${
+            \Delta T = \frac{T_0^2}{\tau ^2} \Delta \tau = \frac{4}{216^2}\cdot 1 = 0.000086 \cdots \simeq 0.00009 \notag
+          });
+          となる。よって、${T=2.01869\pm 0.00009}とかける。
+        }
+      >
+      +subsection{${g_2}の算出}<
+        +p{
+          以上の測定値及び算出値を用いて${g_2}を求めると、
+        }
+        +math(${
+          g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{d^2}{10h^2} + \frac{a_i a_f}{8l^2}}
+          = \frac{4 \pi ^2 \cdot 1008.3}{2.01869 ^2} \p{1+\frac{25.40^2}{10\cdot 1008.3^2} + \frac{34\cdot 32}{8\cdot 879.5^2}}
+        });
+        +math(${
+          = 9766.1257200\cdots \milli\metre / \second ^2 = 9.7661257200\cdots \metre / \second ^2
+        });
+        +p{
+          となる。${\Delta g_2}は、${g_2 \simeq 10 \metre\second^{-2}, h \simeq 1000 \milli\metre, T \simeq 2 \second}を用いて、
+        }
+        +math(${
+          \Delta g_2 = g_2 \sqrt{\p{\frac{\Delta h}{h}}^2 + \p{\frac{2\Delta T}{T}}^2}
+          \simeq 10 \sqrt{\p{\frac{0.7}{1000}}^2 + \p{\frac{2 \cdot 0.00009}{2}}^2}
+        });
+        +math(${
+          = 0.007052307 \cdots \simeq 0.007 \metre \second ^{-2}
+        });
+        +p{
+          と求まる。よって2回目の測定結果は${9.766\pm 0.007 \metre \second ^ {-2}}となった。
+        }
+      >
+    >
+
+    %3回目の実験
+    +newpage;
+    +section{3回目の実験の解析結果}<
+      +subsection{${h}の算出}<
+        +p{
+          ${ H}と${h''}と${d}より${h}を求めると
+          \eqn(${
+            h = H - h'' -d/2 = 1055.5 - 34.5 - 25.40 / 2 = 1008.3 \milli \metre \notag
+          });
+          となる。すでに求めた${\Delta h}と併記すると${h=1008.3 \pm 0.7 \milli\metre}とかける。
+        }
+      >
+      +subsection{${T}の算出}<
+        +p{
+          振り子の長さ${h}より、周期${T>2}と予想される。${T_0=2}、${\Delta \tau=1}より、${T}と${\Delta T}を求めると、
+          \eqn(${
+            T = t_0 + \frac{T_0^2}{\tau - T_0}
+            = 2 + \frac{2^2}{284 - 2} = 2.01418 \second \notag
+          });
+          \eqn(${
+            \Delta T = \frac{T_0^2}{\tau ^2} \Delta \tau = \frac{4}{284^2}\cdot 1 = 0.000050 \cdots \simeq 0.00005 \notag
+          });
+          となる。よって、${T=2.01418\pm 0.00005}とかける。
+        }
+      >
+      +subsection{${g_3}の算出}<
+        +p{
+          以上の測定値及び算出値を用いて${g_3}を求めると、
+        }
+        +math(${
+          g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{d^2}{10h^2} + \frac{a_i a_f}{8l^2}}
+          = \frac{4 \pi ^2 \cdot 1008.3}{2.01418 ^2} \p{1+\frac{25.40^2}{10\cdot 1008.3^2} + \frac{40\cdot 31}{8\cdot 879.5^2}}
+        });
+        +math(${
+          = 9810.1233565\cdots \milli\metre / \second ^2 = 9.8101233565\cdots \metre / \second ^2
+        });
+        +p{
+          となる。${\Delta g_3}は、${g_3 \simeq 10 \metre\second^{-2}, h \simeq 1000 \milli\metre, T \simeq 2 \second}を用いて、
+        }
+        +math(${
+          \Delta g_3 = g_3 \sqrt{\p{\frac{\Delta h}{h}}^2 + \p{\frac{2\Delta T}{T}}^2}
+          \simeq 10 \sqrt{\p{\frac{0.7}{1000}}^2 + \p{\frac{2 \cdot 0.00005}{2}}^2}
+        });
+        +math(${
+          = 0.007017546 \cdots \simeq 0.007 \metre \second ^{-2}
+        });
+        +p{
+          と求まる。よって3回目の測定結果は${9.810\pm 0.007 \metre \second ^ {-2}}となった。
+        }
+      >
+    >
+
+   %4回目の実験
+    +newpage;
+    +section{4回目の実験の解析結果}<
+      +subsection{${h}の算出}<
+        +p{
+          ${ H}と${h''}と${d}より${h}を求めると
+          \eqn(${
+            h = H - h'' -d/2 = 1055.5 - 67.0 - 25.40 / 2 = 975.8 \milli \metre \notag
+          });
+          となる。すでに求めた${\Delta h}と併記すると${h=975.8 \pm 0.7 \milli\metre}とかける。
+        }
+      >
+      +subsection{${T}の算出}<
+        +p{
+          振り子の長さ${h}より、周期${T<2}と予想される。${T_0=2}、${\Delta \tau=1}より、${T}と${\Delta T}を求めると、
+          \eqn(${
+            T = t_0 - \frac{T_0^2}{\tau + T_0}
+            = 2 - \frac{2^2}{252 + 2} = 1.98425 \second \notag
+          });
+          \eqn(${
+            \Delta T = \frac{T_0^2}{\tau ^2} \Delta \tau = \frac{4}{252^2}\cdot 1 = 0.000063 \cdots \simeq 0.00005 \notag
+          });
+          となる。よって、${T=1.98425\pm 0.00005}とかける。
+        }
+      >
+      +subsection{${g_4}の算出}<
+        +p{
+          以上の測定値及び算出値を用いて${g_4}を求めると、
+        }
+        +math(${
+          g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{d^2}{10h^2} + \frac{a_i a_f}{8l^2}}
+          = \frac{4 \pi ^2 \cdot 975.8}{1.98425 ^2} \p{1+\frac{25.40^2}{10\cdot 975.8^2} + \frac{28\cdot 24}{8\cdot 879.5^2}}
+        });
+        +math(${
+          = 9781.6133490\cdots \milli\metre / \second ^2 = 9.7816133490\cdots \metre / \second ^2
+        });
+        +p{
+          となる。${\Delta g_4}は、${g_4 \simeq 10 \metre\second^{-2}, h \simeq 1000 \milli\metre, T \simeq 2 \second}を用いて、
+        }
+        +math(${
+          \Delta g_4 = g_4 \sqrt{\p{\frac{\Delta h}{h}}^2 + \p{\frac{2\Delta T}{T}}^2}
+          \simeq 10 \sqrt{\p{\frac{0.7}{1000}}^2 + \p{\frac{2 \cdot 0.00006}{2}}^2}
+        });
+        +math(${
+          = 0.007028282 \cdots \simeq 0.007 \metre \second ^{-2}
+        });
+        +p{
+          と求まる。よって4回目の測定結果は${9.781\pm 0.007 \metre \second ^ {-2}}となった。
+        }
+      >
+    >
+    
+    %5回目の実験
+    +newpage;
+    +section{5回目の実験の解析結果}<
+      +subsection{${h}の算出}<
+        +p{
+          ${ H}と${h''}と${d}より${h}を求めると
+          \eqn(${
+            h = H - h'' -d/2 = 1055.5 - 67.0 - 25.40 / 2 = 975.8 \milli \metre \notag
+          });
+          となる。すでに求めた${\Delta h}と併記すると${h=975.8 \pm 0.7 \milli\metre}とかける。
+        }
+      >
+      +subsection{${T}の算出}<
+        +p{
+          振り子の長さ${h}より、周期${T<2}と予想される。${T_0=2}、${\Delta \tau=1}より、${T}と${\Delta T}を求めると、
+          \eqn(${
+            T = t_0 - \frac{T_0^2}{\tau + T_0}
+            = 2 - \frac{2^2}{236 + 2} = 1.98319 \second \notag
+          });
+          \eqn(${
+            \Delta T = \frac{T_0^2}{\tau ^2} \Delta \tau = \frac{4}{236^2}\cdot 1 = 0.000072 \cdots \simeq 0.00007 \notag
+          });
+          となる。よって、${T=1.98319\pm 0.00007}とかける。
+        }
+      >
+      +subsection{${g_5}の算出}<
+        +p{
+          以上の測定値及び算出値を用いて${g_5}を求めると、
+        }
+        +math(${
+          g = \frac{4 \pi ^2 h}{T^2} \p{1 + \frac{d^2}{10h^2} + \frac{a_i a_f}{8l^2}}
+          = \frac{4 \pi ^2 \cdot 975.8}{1.98319 ^2} \p{1+\frac{25.40^2}{10\cdot 975.8^2} + \frac{40\cdot 34}{8\cdot 879.5^2}}
+        });
+        +math(${
+          = 9793.1481672\cdots \milli\metre / \second ^2 = 9.7931481672\cdots \metre / \second ^2
+        });
+        +p{
+          となる。${\Delta g_5}は、${g_5 \simeq 10 \metre\second^{-2}, h \simeq 1000 \milli\metre, T \simeq 2 \second}を用いて、
+        }
+        +math(${
+          \Delta g_5 = g_5 \sqrt{\p{\frac{\Delta h}{h}}^2 + \p{\frac{2\Delta T}{T}}^2}
+          \simeq 10 \sqrt{\p{\frac{0.7}{1000}}^2 + \p{\frac{2 \cdot 0.00007}{2}}^2}
+        });
+        +math(${
+          = 0.007036746 \cdots \simeq 0.007 \metre \second ^{-2}
+        });
+        +p{
+          と求まる。よって5回目の測定結果は${9.793\pm 0.007 \metre \second ^ {-2}}となった。
+        }
+      >
+    >
+    
+    +newpage;
+    +section{重力加速度の決定}<
+      +fig-center(
+        textbox{
+          \easytable[l; c; c; r]{
+            | |${h / \milli\metre} | ${T / \second} | ${g_1 / \metre \second^{-2} }
+            |１回目 |1008.3 ${\pm}0.7| 2.01081${\pm}0.00003| 9.786${\pm}0.007
+            |２回目 |1008.3 ${\pm}0.7| 2.01869${\pm}0.00009| 9.766${\pm}0.007
+            |３回目 |1008.3 ${\pm}0.7| 2.01418${\pm}0.00005| 9.810${\pm}0.007
+            |４回目 |975.8${\pm}0.7| 1.98425${\pm}0.00005| 9.781${\pm}0.007
+            |５回目 |975.8${\pm}0.7| 1.98319${\pm}0.00007| 9.793${\pm}0.007
+          |}
+        }|> with-caption-top{表2:解析結果}
+      );
+      +fig-center(
+        include-image 250pt `不確かさの範囲.jpeg`
+        |> with-caption-bottom { 図2:不確かさの範囲 }
+      );
+      +p{
+        測定結果から平均の重力加速度${g}を求めると、
+        \gather(${
+          | g = \frac{\sum_{i=1}^n g_i}{n} = \frac{9.786+9.766+9.810+9.781+9.793}{5} = 9.7872 \metre\second ^{-2} \notag
+          | \Delta g = \sqrt{ \frac{ \sum_{i=1}^{n} \p{g_i - g}^2}{n \p{n-1}}} \notag
+          | = \sqrt{ \frac{\p{9.786-9.7872}^2+\p{9.766-9.7872}^2+\p{9.810-9.7872}^2+\p{9.781-9.7872}^2+\p{9.793-9.7872}^2}{5 \cdot 4}} \notag
+          | = 0.028 \metre\second ^{-2} \notag
+        |});
+        となる。よって今回の実験でも止まった重力加速度は${9.787 \pm 0.03 \milli\second ^{-2}}となった。
+      }
+
+    >
+  >
+
+  +chapter{考察}<
+    +p{
+      今回の実験では計測値の散らばりが大きく、重力加速度を4桁まで求めることはできなかった。うなりの周期${\tau}が精密でなかったためと考える。原因としては、二人で交互に${\tau}を計測したため計測に個人差が出た、周囲が少し明るく正確に2秒間隔で線を追うことができなかった、などが考えられる。より精密に計測するためには、周囲をより暗くし、一人で計測することで対策できる。
+    }
+    +p{
+      教科書に載っている東京の重力加速度を参考にすると${9.7978872 \metre\second ^{-2}}であった。今回の実験値${9.787 \pm 0.03\milli\second ^{-2}}と比較すると、不確かさの範囲ないで一致したため正確に測定できたと考えられる。
+    }
+  >
+  +chapter{感想}<
+    +p{
+      どの程度うなりの周期${\tau}が一致するのか分からなかったため、５回実験を行った。１回目と２回目の実験の後、値が違いすぎるのではないかと心配になり同じ条件で実験を行った。
+    }
+  >
+>
+
+% 付録
+% コピペよう
+
+% 章+段落
+% +chapter{ hoge }<
+%   +p{
+%     hoge    
+%   }
+% >
+
+% 数式
+% \eqn(${
+%   E = mc^2
+%   \label!(` hoge `)
+% });
+
+% 表
+% https://satyrographos-packages.netlify.app/docs/easytable-doc/easytable.pdf
+% +fig-center(
+%     textbox{
+%       \easytable[l; r]{
+%         |hoge |hoge
+%       |}
+%     }|> with-caption-top{表1:キャプション}
+% )
+
+% 画像
+% https://satyrographos-packages.netlify.app/docs/image-doc/manual-ja.pdf
+% +fig-center(
+%   include-image 300pt `hoge.jpeg`
+%   |> with-caption-bottom { hoge }
+% );
+
+% SI単位の入れ方
+% https://satyrographos-packages.netlify.app/docs/siunitx-doc/siunitx-ja.pdf
+% 落単は知りません
+
+
